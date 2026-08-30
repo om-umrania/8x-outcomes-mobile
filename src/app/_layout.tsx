@@ -1,18 +1,35 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
+import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import { useColorScheme } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
-import AppTabs from '@/components/app-tabs';
+import { RunProvider } from '@/state/RunProvider';
+import { RunnerProvider } from '@/runner/RunnerContext';
+import { WorkerProvider } from '@/worker/WorkerProvider';
 
-SplashScreen.preventAutoHideAsync();
-
-export default function TabLayout() {
+export default function RootLayout() {
   const colorScheme = useColorScheme();
+
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <SafeAreaProvider>
+      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+        <RunProvider>
+          <RunnerProvider>
+            <WorkerProvider>
+              <Stack screenOptions={{ headerShown: false, animation: 'slide_from_right' }}>
+                <Stack.Screen name="index" />
+                <Stack.Screen name="onboarding" />
+                <Stack.Screen name="calibrating" />
+                <Stack.Screen name="calibration-mission" />
+                <Stack.Screen name="inbox" />
+                <Stack.Screen name="worker-mission" />
+                <Stack.Screen name="first-node" />
+                <Stack.Screen name="thanks" />
+                <Stack.Screen name="profile" />
+              </Stack>
+            </WorkerProvider>
+          </RunnerProvider>
+        </RunProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }
