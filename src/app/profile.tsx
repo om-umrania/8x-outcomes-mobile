@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import { router, useLocalSearchParams } from 'expo-router';
+import { router, useLocalSearchParams, type Href } from 'expo-router';
 
 import { CapabilityBar } from '@/components/CapabilityBar';
 import { ScreenContainer } from '@/components/ScreenContainer';
@@ -52,7 +52,14 @@ export default function CapabilityProfileScreen() {
         ]}
       >
         {CAPABILITY_DIMENSIONS.map((dimension) => (
-          <CapabilityBar key={dimension.id} dimension={dimension} isNew={dimension.id === highlight} />
+          <CapabilityBar
+            key={dimension.id}
+            dimension={dimension}
+            isNew={dimension.id === highlight}
+            onPress={() =>
+              router.push({ pathname: '/capability-detail', params: { id: dimension.id } } as Href)
+            }
+          />
         ))}
       </View>
 

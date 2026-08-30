@@ -42,6 +42,28 @@ export interface MissionHistoryItem {
   channel: MissionChannel;
 }
 
+export type CapabilitySignal = 'process' | 'outcome';
+
+export interface CapabilityEvidencePoint {
+  missionId: string;
+  missionTitle: string;
+  completedLabel: string;
+  signal: CapabilitySignal;
+  /** How much this one mission moved this dimension, 0-100. */
+  contribution: number;
+  /** Short fictional observation — what was actually seen, not a self-report. */
+  note: string;
+}
+
+export interface CapabilityDimensionDetail {
+  id: string;
+  /** Plain-language description of what this dimension actually measures. */
+  description: string;
+  /** Confidence in this dimension over recent missions, oldest first, 0-100. */
+  trend: number[];
+  evidence: CapabilityEvidencePoint[];
+}
+
 export interface WorkerState {
   selectedMissionId: string | null;
   activeCaptureMissionId: string | null;

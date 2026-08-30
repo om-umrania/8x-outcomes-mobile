@@ -1,5 +1,6 @@
 import type {
   CapabilityDimension,
+  CapabilityDimensionDetail,
   MissionHistoryItem,
   WorkerMission,
 } from '@/worker/types';
@@ -161,6 +162,130 @@ export const CAPABILITY_DIMENSIONS: CapabilityDimension[] = [
     signalLabel: 'Early signal',
   },
 ];
+
+/** Per-dimension drill-down: which missions fed it and what was observed. Keyed by CapabilityDimension.id. */
+export const CAPABILITY_DIMENSION_DETAILS: Record<string, CapabilityDimensionDetail> = {
+  'data-structuring': {
+    id: 'data-structuring',
+    description:
+      'How cleanly you turn messy, real-world data into something someone else can trust and act on without re-checking it.',
+    trend: [0, 34, 61, 87],
+    evidence: [
+      {
+        missionId: CALIBRATION_MISSION_ID,
+        missionTitle: 'Untangle Eat Eat’s vendor sheet',
+        completedLabel: 'Completed just now · calibration',
+        signal: 'process',
+        contribution: 68,
+        note: 'Caught the duplicate “Ganga Foods” entries and asked for a merge rule before touching the data — didn’t just guess.',
+      },
+      {
+        missionId: 'eat-eat-vendor-scorecard',
+        missionTitle: 'Build next week’s vendor scorecard',
+        completedLabel: 'Completed 2 days ago',
+        signal: 'outcome',
+        contribution: 19,
+        note: 'Scorecard shipped with one clear headline number — the kitchen manager could act on it in under 10 seconds.',
+      },
+    ],
+  },
+  pressure: {
+    id: 'pressure',
+    description:
+      'Whether your reasoning stays structured, not just fast, when a plan breaks mid-execution.',
+    trend: [0, 22, 47, 68],
+    evidence: [
+      {
+        missionId: 'eat-eat-routing-puzzle',
+        missionTitle: 'Reroute around a flooded corridor',
+        completedLabel: 'Completed 2 days ago',
+        signal: 'process',
+        contribution: 40,
+        note: 'Resequenced the highest-risk delivery zone first and named a fallback before being asked for one.',
+      },
+      {
+        missionId: 'eat-eat-second-disruption',
+        missionTitle: 'One more disruption',
+        completedLabel: 'Completed 2 days ago · adaptive',
+        signal: 'process',
+        contribution: 28,
+        note: 'Held the original route’s shape instead of improvising from scratch when a second disruption landed.',
+      },
+    ],
+  },
+  communication: {
+    id: 'communication',
+    description:
+      'Whether someone downstream can act on what you handed them without asking a follow-up question.',
+    trend: [0, 30, 52, 75],
+    evidence: [
+      {
+        missionId: 'eat-eat-vendor-scorecard',
+        missionTitle: 'Build next week’s vendor scorecard',
+        completedLabel: 'Completed 2 days ago',
+        signal: 'outcome',
+        contribution: 45,
+        note: 'The scorecard’s headline number required zero clarifying questions from the kitchen manager.',
+      },
+      {
+        missionId: 'eat-eat-ferment-call',
+        missionTitle: 'Talk through a live fermentation call',
+        completedLabel: 'Completed 4 days ago',
+        signal: 'process',
+        contribution: 30,
+        note: 'Narrated the batter fix in one continuous breath a line cook could follow live, mid-service.',
+      },
+    ],
+  },
+  'structural-thinking': {
+    id: 'structural-thinking',
+    description:
+      'Whether you build a repeatable shape for a problem instead of solving it once and starting over next time.',
+    trend: [0, 20, 40, 58],
+    evidence: [
+      {
+        missionId: CALIBRATION_MISSION_ID,
+        missionTitle: 'Untangle Eat Eat’s vendor sheet',
+        completedLabel: 'Completed just now · calibration',
+        signal: 'process',
+        contribution: 35,
+        note: 'Proposed a structure the ops team could reuse for future vendor sheets, not just this one.',
+      },
+      {
+        missionId: 'eat-eat-vendor-scorecard',
+        missionTitle: 'Build next week’s vendor scorecard',
+        completedLabel: 'Completed 2 days ago',
+        signal: 'outcome',
+        contribution: 23,
+        note: 'Scorecard format was built to be refreshed weekly, not redesigned from scratch each time.',
+      },
+    ],
+  },
+  adaptability: {
+    id: 'adaptability',
+    description:
+      'How your plan changes shape when the ground truth changes mid-mission, without losing the original goal.',
+    trend: [0, 18, 33, 48],
+    evidence: [
+      {
+        missionId: 'eat-eat-dosa-batter',
+        missionTitle: 'Rescue the dosa batter',
+        completedLabel: 'Completed 4 days ago',
+        signal: 'process',
+        contribution: 22,
+        note: 'Adjusted the rice-to-urad-dal ratio for a coarser substitute instead of waiting for the original ingredient.',
+      },
+      {
+        missionId: 'eat-eat-second-disruption',
+        missionTitle: 'One more disruption',
+        completedLabel: 'Completed 2 days ago · adaptive',
+        signal: 'outcome',
+        contribution: 26,
+        note: 'Kept drivers moving through a second, unrelated disruption without restarting the whole route.',
+      },
+    ],
+  },
+};
 
 export const MISSION_HISTORY: MissionHistoryItem[] = [
   {

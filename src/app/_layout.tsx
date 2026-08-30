@@ -25,6 +25,7 @@ export default function RootLayout() {
                 <Stack.Screen name="first-node" />
                 <Stack.Screen name="thanks" />
                 <Stack.Screen name="profile" />
+                <Stack.Screen name="capability-detail" />
               </Stack>
             </WorkerProvider>
           </RunnerProvider>
