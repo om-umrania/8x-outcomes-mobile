@@ -1,12 +1,47 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { StyleSheet, TextInput, View } from 'react-native';
 import { router, type Href } from 'expo-router';
+import Animated, {
+  FadeInDown,
+  useAnimatedStyle,
+  useSharedValue,
+  withRepeat,
+  withSequence,
+  withTiming,
+} from 'react-native-reanimated';
 
+import { OnboardingProgress } from '@/components/OnboardingProgress';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
+
+function SendingDots() {
+  const beat = useSharedValue(0);
+
+  useEffect(() => {
+    beat.value = withRepeat(withSequence(withTiming(1, { duration: 420 }), withTiming(0, { duration: 420 })), -1, false);
+  }, [beat]);
+
+  const dot1Style = useAnimatedStyle(() => ({
+    opacity: 0.3 + Math.abs(Math.sin(beat.value * Math.PI)) * 0.7,
+  }));
+  const dot2Style = useAnimatedStyle(() => ({
+    opacity: 0.3 + Math.abs(Math.sin(((beat.value + 0.33) % 1) * Math.PI)) * 0.7,
+  }));
+  const dot3Style = useAnimatedStyle(() => ({
+    opacity: 0.3 + Math.abs(Math.sin(((beat.value + 0.66) % 1) * Math.PI)) * 0.7,
+  }));
+
+  return (
+    <View style={styles.dotsRow}>
+      <Animated.View style={[styles.dot, dot1Style]} />
+      <Animated.View style={[styles.dot, dot2Style]} />
+      <Animated.View style={[styles.dot, dot3Style]} />
+    </View>
+  );
+}
 
 export default function LoginScreen() {
   const theme = useTheme();
@@ -24,14 +59,19 @@ export default function LoginScreen() {
   return (
     <ScreenContainer
       footer={
-        <PrimaryButton
-          label={sending ? 'Sending magic link…' : 'Get magic link'}
-          onPress={requestMagicLink}
-          disabled={!contact.trim() || sending}
-        />
+        <View style={styles.footerStack}>
+          {sending ? <SendingDots /> : null}
+          <PrimaryButton
+            label={sending ? 'Sending magic link…' : 'Get magic link'}
+            onPress={requestMagicLink}
+            disabled={!contact.trim() || sending}
+          />
+        </View>
       }
     >
-      <View style={styles.hero}>
+      <OnboardingProgress step={0} />
+
+      <Animated.View entering={FadeInDown.duration(420)} style={styles.hero}>
         <ThemedText type="small" themeColor="textSecondary">
           8X WORKER
         </ThemedText>
@@ -42,9 +82,9 @@ export default function LoginScreen() {
           Eat Eat is hiring across the kitchen, logistics, and ops crew. Verify your phone or
           email to start — no password needed.
         </ThemedText>
-      </View>
+      </Animated.View>
 
-      <View style={styles.field}>
+      <Animated.View entering={FadeInDown.duration(420).delay(90)} style={styles.field}>
         <ThemedText type="smallBold">Phone or email</ThemedText>
         <TextInput
           accessibilityLabel="Phone or email"
@@ -60,16 +100,17 @@ export default function LoginScreen() {
             { color: theme.text, backgroundColor: theme.backgroundElement, borderColor: theme.border },
           ]}
         />
-      </View>
+      </Animated.View>
 
-      <View
+      <Animated.View
+        entering={FadeInDown.duration(420).delay(160)}
         style={[styles.notice, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}
       >
         <ThemedText type="small" themeColor="textSecondary">
           No resume score up front — just a quick calibration mission once you’re in, matched
           to your background.
         </ThemedText>
-      </View>
+      </Animated.View>
     </ScreenContainer>
   );
 }
@@ -86,4 +127,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   notice: { borderWidth: 1, borderRadius: 16, padding: Spacing.three },
+  footerStack: { gap: Spacing.two },
+  dotsRow: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
+  dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#3B5BFF' },
 });

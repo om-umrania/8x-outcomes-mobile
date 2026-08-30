@@ -1,4 +1,5 @@
 import { Pressable, StyleSheet } from 'react-native';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
 import { ThemedText } from '@/components/themed-text';
 import { Spacing } from '@/constants/theme';
@@ -14,23 +15,38 @@ export function PrimaryButton({
   disabled?: boolean;
 }) {
   const theme = useTheme();
+  const pressed = useSharedValue(0);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: 1 - pressed.value * 0.04 }],
+    opacity: 1 - pressed.value * 0.15,
+  }));
 
   return (
     <Pressable
       accessibilityRole="button"
       accessibilityLabel={label}
       onPress={onPress}
+      onPressIn={() => {
+        pressed.value = withTiming(1, { duration: 90 });
+      }}
+      onPressOut={() => {
+        pressed.value = withSpring(0, { damping: 14, stiffness: 260 });
+      }}
       disabled={disabled}
-      style={({ pressed }) => [
-        styles.button,
-        { backgroundColor: theme.primary },
-        disabled && styles.disabled,
-        pressed && !disabled && styles.pressed,
-      ]}
     >
-      <ThemedText type="smallBold" style={[styles.label, { color: theme.primaryText }]}>
-        {label}
-      </ThemedText>
+      <Animated.View
+        style={[
+          styles.button,
+          animatedStyle,
+          { backgroundColor: theme.primary },
+          disabled && styles.disabled,
+        ]}
+      >
+        <ThemedText type="smallBold" style={[styles.label, { color: theme.primaryText }]}>
+          {label}
+        </ThemedText>
+      </Animated.View>
     </Pressable>
   );
 }
@@ -43,7 +59,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     minHeight: 56, // thumb-reachable target size
   },
-  pressed: { opacity: 0.85 },
   disabled: { opacity: 0.4 },
   label: { fontSize: 17 },
 });
