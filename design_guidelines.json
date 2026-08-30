@@ -1,0 +1,210 @@
+{
+  "app_name": "8x Worker",
+  "personality": "1 iOS-Native Clean with structural elements of 6 Glass / Luxe",
+  "personality_one_liner": "A premium, calm, and human interface utilizing Liquid Glass principles to separate functional controls from content, anchored by a warm terracotta palette.",
+  "color": {
+    "surface": "#F9F8F6",
+    "onSurface": "#1A1918",
+    "surfaceSecondary": "#FFFFFF",
+    "onSurfaceSecondary": "#4A4846",
+    "surfaceTertiary": "#EFECE7",
+    "onSurfaceTertiary": "#6A6865",
+    "surfaceInverse": "#1A1918",
+    "onSurfaceInverse": "#F9F8F6",
+    "brand": "#C16E5A",
+    "brandPrimary": "#C16E5A",
+    "onBrandPrimary": "#FFFFFF",
+    "brandSecondary": "#E3A89A",
+    "onBrandSecondary": "#1A1918",
+    "brandTertiary": "#F4E1DD",
+    "onBrandTertiary": "#8C3A27",
+    "success": "#6B8E7B",
+    "onSuccess": "#FFFFFF",
+    "warning": "#D4A373",
+    "onWarning": "#1A1918",
+    "error": "#B45454",
+    "onError": "#FFFFFF",
+    "info": "#7A8B99",
+    "onInfo": "#FFFFFF",
+    "border": "#E5E3DF",
+    "borderStrong": "#CFCAC2",
+    "divider": "#E5E3DF",
+    "dark": {
+      "surface": "#161514",
+      "onSurface": "#F9F8F6",
+      "surfaceSecondary": "#22211F",
+      "onSurfaceSecondary": "#D4D2CF",
+      "surfaceTertiary": "#2D2B29",
+      "onSurfaceTertiary": "#B3B0AC",
+      "surfaceInverse": "#F9F8F6",
+      "onSurfaceInverse": "#1A1918",
+      "brandPrimary": "#D48471",
+      "onBrandPrimary": "#1A1918",
+      "brandSecondary": "#944937",
+      "onBrandSecondary": "#F9F8F6",
+      "brandTertiary": "#4A251D",
+      "onBrandTertiary": "#E8B8AE",
+      "border": "#33312E",
+      "borderStrong": "#4D4945",
+      "divider": "#33312E"
+    }
+  },
+  "typography": {
+    "displayFontFamily": "Geist",
+    "textFontFamily": "Geist",
+    "scale": {
+      "sm": 12,
+      "base": 14,
+      "lg": 16,
+      "xl": 20,
+      "2xl": 24
+    }
+  },
+  "spacing": {
+    "rule": "Generous vertical breathing room. Cards use md/lg padding. UI floats gracefully over content.",
+    "xs": 4,
+    "sm": 8,
+    "md": 12,
+    "lg": 16,
+    "xl": 24,
+    "2xl": 32,
+    "3xl": 48
+  },
+  "radius_tokens": {
+    "sm": 6,
+    "md": 12,
+    "lg": 20,
+    "pill": 999
+  },
+  "shadow_tier": 1,
+  "navigation": "bottom_tabs",
+  "icon_set": "SF Symbols style fallback to Ionicons (outlined for inactive, filled for active)",
+  "glassmorphism": {
+    "enabled": true,
+    "do's": [
+      "Use Liquid Glass (translucent layered surfaces) for the functional layer: tab bars, sticky headers, and floating action containers.",
+      "Ensure text on glass is fully readable by applying a tint (>= 70% opacity of surface) behind the blur.",
+      "Float the tab bar slightly above the bottom edge if possible, or use a full-width glass bottom bar over scrolling content."
+    ],
+    "dont's": [
+      "Never nest glass modifiers (no glass-on-glass).",
+      "Do not use glass for text cards or form inputs in the content layer.",
+      "Avoid heavy drop shadows; use hierarchy and subtle tinting for depth."
+    ]
+  },
+  "platform_libraries": {
+    "glass": {
+      "ios": "expo-glass-effect",
+      "android": "expo-blur",
+      "low_end_android_fallback": "solid surfaceSecondary"
+    },
+    "image": "expo-image",
+    "blur": "expo-blur",
+    "bottom_sheet": "@gorhom/bottom-sheet",
+    "animation": "react-native-reanimated",
+    "gesture": "react-native-gesture-handler"
+  },
+  "screens": [
+    {
+      "name": "Mission Inbox",
+      "purpose": "A calm, uncrowded home screen displaying new and active missions with distinct visual treatments.",
+      "states": {
+        "loading": "Subtle pulsing skeletons matching the card shapes.",
+        "empty": "Warm abstract illustration: 'You're all caught up. We'll notify you when a new mission matches your profile.'",
+        "error": "Readable error message with a soft 'Retry' button."
+      },
+      "layout": "Header with lightweight name-only greeting ('Good morning, Alex'). Vertical list of large, scannable cards. Standard mission cards use surfaceSecondary. The 'Extra mission' uses a brandTertiary tinted background and a distinct badge to indicate urgency/special request. Cards detail purpose, requested action, estimated duration, and mission type (Text/Voice)."
+    },
+    {
+      "name": "Mission Detail - Text",
+      "purpose": "Structured input screen for written missions, prioritizing the mission context above the questions.",
+      "states": {
+        "loading": "Spinner centered on screen.",
+        "empty": "N/A - Data driven.",
+        "error": "Error fetching mission details + Retry."
+      },
+      "layout": "Scrollable content layer. Top: Mission context block. Below: Structured questions with clean text fields. Bottom: Floating sticky glass container housing the 'Submit response' CTA. Follows iOS native generous padding and clear typographic hierarchy."
+    },
+    {
+      "name": "Consent Bottom Sheet",
+      "purpose": "Explicit, revocable consent capture prior to starting a voice mission.",
+      "states": {
+        "loading": "N/A",
+        "empty": "N/A",
+        "error": "N/A"
+      },
+      "layout": "Triggered via @gorhom/bottom-sheet. Clean typography explaining that voice is recorded to understand *how* the user approaches real work (process). Includes a prominent toggle and a 'Continue' primary button."
+    },
+    {
+      "name": "Mission Detail - Voice",
+      "purpose": "Immersive, focused call-style interface for audio recording without visual distractions.",
+      "states": {
+        "loading": "Connecting state with soft pulsating text.",
+        "empty": "N/A",
+        "error": "Mic permission error with Settings link."
+      },
+      "layout": "Full-screen interface. Darker or deeply blurred background to signal a mode shift. Top: Mission title and persistent red pulsing recording indicator. Center: Large central VU meter / audio waveform (animated) and a prominent duration timer (e.g., '02:45'). Bottom: Circular native-feeling call controls (Finish, Pause) inside a glass surface."
+    },
+    {
+      "name": "Submission Success",
+      "purpose": "Lightweight, human confirmation post-submission.",
+      "states": {
+        "loading": "N/A",
+        "empty": "N/A",
+        "error": "N/A"
+      },
+      "layout": "Centered layout. Large checkmark icon (success color), human copy: 'Got it — thank you.', subtext: 'Your response has been securely submitted.' Subtle auto-transition back to Missions or Profile after 2-3 seconds."
+    },
+    {
+      "name": "Capability Profile",
+      "purpose": "Visual centerpiece displaying observed capabilities (Process vs Outcome) without gamification.",
+      "states": {
+        "loading": "Skeleton bars loading gracefully.",
+        "empty": "Empty state explaining: 'Your profile evolves from how you approach real work. Complete missions to build your capability profile.'",
+        "error": "Error loading profile + Retry."
+      },
+      "layout": "Top: Profile header with abstract fluid background and user avatar. Content: Vertical list of ~5 dimensions (e.g., Domain Intuition, Problem Solving). Each dimension uses an elegant horizontal capability bar. To distinguish contribution: The bar is split. The left/larger segment represents 'Process' (solid brandPrimary). The right/smaller segment represents 'Outcome' (brandTertiary or translucent/striped). Clear typography above the bar labels the dimension. No points, badges, or leaderboards."
+    },
+    {
+      "name": "History",
+      "purpose": "Secondary tab showing 2-3 believable completed missions.",
+      "states": {
+        "loading": "List skeletons.",
+        "empty": "'No completed missions yet.'",
+        "error": "Failed to load history."
+      },
+      "layout": "Simple iOS-native list view. Each row shows mission title, completion date, and a subtle chevron, utilizing the standard layout rhythm. Glass tab bar floats above the scrolling list."
+    }
+  ],
+  "images": {
+    "eat_eat_logo": {
+      "url": "https://images.unsplash.com/photo-1680986157053-5fa731966cfc?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzR8MHwxfHNlYXJjaHwxfHxFYXQlMjBFYXQlMjBsb2dvJTIwdHJhbnNwYXJlbnR8ZW58MHx8fHwxNzg4MDgwNjY1fDA&ixlib=rb-4.1.0&q=85",
+      "alt": "Eat Eat company logo (Graffiti style placeholder)"
+    },
+    "chef_mission_bg": {
+      "url": "https://images.unsplash.com/photo-1665206221363-568ea2f7b195?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxODF8MHwxfHNlYXJjaHwxfHxTb3V0aCUyMEluZGlhbiUyMGNoZWYlMjBjb29raW5nJTIwcmVhbCUyMHBob3RvfGVufDB8fHx8MTc4ODA4MDY2NXww&ixlib=rb-4.1.0&q=85",
+      "alt": "South Indian chef cooking in a busy kitchen"
+    },
+    "profile_header_bg": {
+      "url": "https://images.unsplash.com/photo-1671716784499-a3d26826d844?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMHdhcm0lMjB0ZXJyYWNvdHRhJTIwbW9kZXJuJTIwZmx1aWQlMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc4ODA4MDY2NXww&ixlib=rb-4.1.0&q=85",
+      "dark": "https://images.unsplash.com/photo-1665441644195-25d7eb2ba212?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2OTF8MHwxfHNlYXJjaHwyfHxhYnN0cmFjdCUyMHdhcm0lMjB0ZXJyYWNvdHRhJTIwbW9kZXJuJTIwZmx1aWQlMjBiYWNrZ3JvdW5kfGVufDB8fHx8MTc4ODA4MDY2NXww&ixlib=rb-4.1.0&q=85",
+      "alt": "Abstract warm terracotta fluid background"
+    }
+  },
+  "haptics": {
+    "mission_card_tap": "light",
+    "submit_response": "medium",
+    "voice_record_start": "medium",
+    "voice_record_stop": "heavy",
+    "consent_toggle": "light",
+    "tab_switch": "light"
+  },
+  "instructions_to_main_agent": [
+    "Strictly adhere to the '1 iOS-Native Clean' personality overlaid with 'Liquid Glass' principles. Navigation bars, tab bars, and sticky CTAs should utilize expo-glass-effect (or expo-blur) with proper background tinting to guarantee readability.",
+    "Do not use ANY blue, indigo, or purple. The primary accent is a warm Terracotta (#C16E5A).",
+    "For the Capability Profile, implement the horizontal capability bars carefully: split a single 100% bar container into two inline segments. The left segment (Process) is larger and uses solid brandPrimary. The right segment (Outcome) uses brandTertiary. Ensure labels are above the bar.",
+    "Voice Mission detail must feel like an immersive native call screen. Hide bottom tabs on this screen. Use a persistent red pulsing dot for the recording indicator and display a central audio waveform/VU meter.",
+    "The 'Extra mission' card in the inbox needs a distinct visual lift compared to standard missions—use the brandTertiary background color and a specific badge to indicate urgency.",
+    "All copy must be human, brief, and conversational (e.g., 'Got it — thank you.'). Avoid point systems, enterprise jargon, or gamified leaderboards entirely."
+  ]
+}
