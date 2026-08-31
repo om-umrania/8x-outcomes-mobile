@@ -106,9 +106,18 @@ export default function CapabilityDetailScreen() {
   const theme = useTheme();
   const { id } = useLocalSearchParams<{ id: string }>();
   const [filter, setFilter] = useState<Filter>('all');
+  // The static web export has no route param at build time, so the exported HTML always
+  // renders the not-found shell below. Reading `id` only after mount keeps the client's
+  // first render identical to that markup and avoids a React hydration mismatch; the real
+  // content then appears a tick later, which the existing entrance animations already cover.
+  const [mounted, setMounted] = useState(false);
 
-  const dimension = CAPABILITY_DIMENSIONS.find((item) => item.id === id);
-  const detail = id ? CAPABILITY_DIMENSION_DETAILS[id] : undefined;
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  const dimension = mounted ? CAPABILITY_DIMENSIONS.find((item) => item.id === id) : undefined;
+  const detail = mounted && id ? CAPABILITY_DIMENSION_DETAILS[id] : undefined;
 
   const processValue = useCountUp(dimension?.processContribution ?? 0);
   const outcomeValue = useCountUp(dimension?.outcomeContribution ?? 0);
@@ -125,9 +134,11 @@ export default function CapabilityDetailScreen() {
         <View style={styles.backRow}>
           <SecondaryButton label="← Your profile" onPress={() => router.back()} />
         </View>
-        <ThemedText type="default" themeColor="textSecondary" style={styles.notFound}>
-          This capability dimension isn’t in the demo fixture.
-        </ThemedText>
+        {mounted ? (
+          <ThemedText type="default" themeColor="textSecondary" style={styles.notFound}>
+            This capability dimension isn’t in the demo fixture.
+          </ThemedText>
+        ) : null}
       </ScreenContainer>
     );
   }

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 
@@ -13,6 +14,14 @@ import { CAPABILITY_DIMENSIONS, MISSION_HISTORY } from '@/worker/fixture';
 export default function CapabilityProfileScreen() {
   const theme = useTheme();
   const { highlight } = useLocalSearchParams<{ highlight?: string }>();
+  // The static web export has no route param at build time, so the exported HTML never
+  // shows the NEW badge. Applying `highlight` only after mount keeps the client's first
+  // render identical to that markup and avoids a React hydration mismatch.
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <ScreenContainer>
@@ -55,7 +64,7 @@ export default function CapabilityProfileScreen() {
           <CapabilityBar
             key={dimension.id}
             dimension={dimension}
-            isNew={dimension.id === highlight}
+            isNew={mounted && dimension.id === highlight}
             onPress={() =>
               router.push({ pathname: '/capability-detail', params: { id: dimension.id } } as Href)
             }
