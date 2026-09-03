@@ -13,6 +13,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { Icon } from '@/components/Icon';
 import { OnboardingProgress } from '@/components/OnboardingProgress';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { ScreenContainer } from '@/components/ScreenContainer';
@@ -26,10 +27,18 @@ type Selection = 'resume' | 'linkedin' | null;
 function CheckBadge() {
   return (
     <Animated.View entering={ZoomIn.springify().damping(12)} style={styles.checkBadge}>
-      <ThemedText type="smallBold" style={styles.checkGlyph}>
-        ✓
-      </ThemedText>
+      <Icon name="checkCircle" size={16} color="#FFFFFF" />
     </Animated.View>
+  );
+}
+
+function LinkedInMark() {
+  return (
+    <View style={styles.linkedinMark}>
+      <ThemedText type="smallBold" style={styles.linkedinMarkText}>
+        in
+      </ThemedText>
+    </View>
   );
 }
 
@@ -74,7 +83,7 @@ export default function OnboardingScreen() {
       footer={
         selection ? (
           <Animated.View key="continue" entering={FadeIn.duration(220)} exiting={FadeOut.duration(120)}>
-            <PrimaryButton label="Continue" onPress={continueToCalibration} />
+            <PrimaryButton label="Continue" onPress={continueToCalibration} icon="arrowRight" />
           </Animated.View>
         ) : (
           <Animated.View key="skip" entering={FadeIn.duration(220)} exiting={FadeOut.duration(120)}>
@@ -105,9 +114,9 @@ export default function OnboardingScreen() {
           onPress={() => setSelection('resume')}
         >
           <Animated.View style={[styles.dropzone, dropzoneStyle]}>
-            <ThemedText type="subtitle" style={styles.dropzoneIcon}>
-              ↑
-            </ThemedText>
+            <View style={[styles.dropzoneBadge, { backgroundColor: theme.backgroundSelected }]}>
+              <Icon name="upload" size={24} color={Signal.blue} />
+            </View>
             <ThemedText type="smallBold">
               {selection === 'resume' ? 'priya-resume.pdf selected' : 'Upload resume'}
             </ThemedText>
@@ -134,18 +143,22 @@ export default function OnboardingScreen() {
           onPress={() => setSelection('linkedin')}
         >
           <Animated.View style={[styles.linkedinButton, linkedinStyle]}>
-            <ThemedText
-              type="smallBold"
-              style={selection === 'linkedin' ? styles.linkedinTextActive : undefined}
-            >
-              {selection === 'linkedin' ? 'LinkedIn connected' : 'Connect LinkedIn'}
-            </ThemedText>
+            <View style={styles.linkedinContent}>
+              <LinkedInMark />
+              <ThemedText
+                type="smallBold"
+                style={selection === 'linkedin' ? styles.linkedinTextActive : undefined}
+              >
+                {selection === 'linkedin' ? 'LinkedIn connected' : 'Connect LinkedIn'}
+              </ThemedText>
+            </View>
             {selection === 'linkedin' ? <CheckBadge /> : null}
           </Animated.View>
         </Pressable>
       </Animated.View>
 
       <Animated.View entering={FadeInDown.duration(400).delay(260)} style={styles.lockRow}>
+        <Icon name="lock" size={14} color={theme.textSecondary} />
         <ThemedText type="small" themeColor="textSecondary">
           Read locally for domain matching only · securely transmitted
         </ThemedText>
@@ -165,7 +178,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     gap: Spacing.two,
   },
-  dropzoneIcon: { fontSize: 28, lineHeight: 32 },
+  dropzoneBadge: {
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   dividerRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
   divider: { flex: 1, height: StyleSheet.hairlineWidth },
   linkedinButton: {
@@ -175,8 +194,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  linkedinContent: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
+  linkedinMark: {
+    width: 22,
+    height: 22,
+    borderRadius: 5,
+    backgroundColor: '#0A66C2',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  linkedinMarkText: { color: '#FFFFFF', fontSize: 12, lineHeight: 14 },
   linkedinTextActive: { color: '#FFFFFF' },
-  lockRow: { alignItems: 'center', marginTop: Spacing.two },
+  lockRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.one, marginTop: Spacing.two },
   checkBadge: {
     position: 'absolute',
     top: 10,

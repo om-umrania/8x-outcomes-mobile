@@ -1,5 +1,6 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 
+import { Icon } from '@/components/Icon';
 import { ThemedText } from '@/components/themed-text';
 import { Signal, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -41,18 +42,25 @@ export function WorkerMissionCard({
       <View style={styles.metaRow}>
         {mission.isAdaptive ? (
           <View style={styles.adaptivePill}>
+            <Icon name="bolt" size={12} color="#8A5600" />
             <ThemedText type="smallBold" style={styles.adaptiveText}>
               Extra mission
             </ThemedText>
           </View>
         ) : (
-          <ThemedText type="small" themeColor="textSecondary">
-            {mission.channel === 'voice' ? 'Voice mission' : 'Text mission'}
-          </ThemedText>
+          <View style={styles.channelRow}>
+            <Icon name={mission.channel === 'voice' ? 'waveform' : 'doc'} size={14} color={theme.textSecondary} />
+            <ThemedText type="small" themeColor="textSecondary">
+              {mission.channel === 'voice' ? 'Voice mission' : 'Text mission'}
+            </ThemedText>
+          </View>
         )}
-        <ThemedText type="small" themeColor="textSecondary">
-          {mission.estimatedMinutes} min
-        </ThemedText>
+        <View style={styles.channelRow}>
+          <Icon name="clock" size={13} color={theme.textSecondary} />
+          <ThemedText type="small" themeColor="textSecondary">
+            {mission.estimatedMinutes} min
+          </ThemedText>
+        </View>
       </View>
 
       <View style={styles.copy}>
@@ -67,7 +75,7 @@ export function WorkerMissionCard({
 
       {mission.isAdaptive && mission.adaptiveReason ? (
         <View style={styles.reasonRow}>
-          <View style={styles.reasonDot} />
+          <Icon name="warning" size={14} color={Signal.amber} />
           <ThemedText type="small" style={styles.reasonText}>
             {mission.adaptiveReason}
           </ThemedText>
@@ -81,7 +89,7 @@ export function WorkerMissionCard({
         >
           {STATUS_LABEL[status]}
         </ThemedText>
-        {!unavailable ? <ThemedText style={{ color: Signal.blue }}>→</ThemedText> : null}
+        {!unavailable ? <Icon name="chevronRight" size={16} color={Signal.blue} /> : null}
       </View>
     </Pressable>
   );
@@ -98,7 +106,11 @@ const styles = StyleSheet.create({
   pressed: { opacity: 0.72, transform: [{ scale: 0.99 }] },
   unavailable: { opacity: 0.58 },
   metaRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  channelRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   adaptivePill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
     backgroundColor: '#FFF2D8',
     borderRadius: 99,
     paddingHorizontal: 10,
@@ -108,13 +120,6 @@ const styles = StyleSheet.create({
   copy: { gap: Spacing.one },
   title: { fontSize: 22, lineHeight: 28, fontWeight: '700' },
   reasonRow: { flexDirection: 'row', alignItems: 'flex-start', gap: Spacing.two },
-  reasonDot: {
-    width: 8,
-    height: 8,
-    borderRadius: 4,
-    backgroundColor: Signal.amber,
-    marginTop: 6,
-  },
   reasonText: { flex: 1, color: '#8A5600' },
   openRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
 });

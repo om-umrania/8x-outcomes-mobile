@@ -2,6 +2,7 @@ import { StyleSheet, View } from 'react-native';
 import { router, type Href } from 'expo-router';
 import Animated, { FadeInDown, FadeInUp, ZoomIn } from 'react-native-reanimated';
 
+import { Icon, type IconName } from '@/components/Icon';
 import { OnboardingProgress } from '@/components/OnboardingProgress';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { ScreenContainer } from '@/components/ScreenContainer';
@@ -11,7 +12,11 @@ import { useTheme } from '@/hooks/use-theme';
 import { CALIBRATION_MISSION_ID, WORKER_MISSIONS } from '@/worker/fixture';
 import { useWorker } from '@/worker/WorkerProvider';
 
-const TAGS = ['Data entry', 'Verification', 'Operations'];
+const TAGS: { label: string; icon: IconName }[] = [
+  { label: 'Data entry', icon: 'doc' },
+  { label: 'Verification', icon: 'checklist' },
+  { label: 'Operations', icon: 'build' },
+];
 
 export default function CalibrationMissionScreen() {
   const theme = useTheme();
@@ -25,15 +30,13 @@ export default function CalibrationMissionScreen() {
 
   return (
     <ScreenContainer
-      footer={<PrimaryButton label="Start calibration mission" onPress={start} />}
+      footer={<PrimaryButton label="Start calibration mission" onPress={start} icon="arrowRight" />}
     >
       <OnboardingProgress step={3} />
 
       <View style={styles.hero}>
         <Animated.View entering={ZoomIn.duration(420).springify().damping(13)} style={[styles.badge, { backgroundColor: Signal.violet }]}>
-          <ThemedText type="subtitle" style={styles.badgeText}>
-            ◎
-          </ThemedText>
+          <Icon name="bolt" size={30} color="#FFFFFF" />
         </Animated.View>
         <Animated.View entering={FadeInUp.duration(380).delay(120)}>
           <ThemedText type="title" style={styles.title}>
@@ -61,25 +64,30 @@ export default function CalibrationMissionScreen() {
               </ThemedText>
               <ThemedText style={styles.cardTitle}>{mission.title}</ThemedText>
             </View>
-            <ThemedText type="small" themeColor="textSecondary">
-              {mission.estimatedMinutes} min
-            </ThemedText>
+            <View style={styles.minutesRow}>
+              <Icon name="clock" size={13} color={theme.textSecondary} />
+              <ThemedText type="small" themeColor="textSecondary">
+                {mission.estimatedMinutes} min
+              </ThemedText>
+            </View>
           </View>
           <View style={styles.tagRow}>
             {TAGS.map((tag, index) => (
               <Animated.View
-                key={tag}
+                key={tag.label}
                 entering={FadeInUp.duration(320).delay(380 + index * 90)}
                 style={[styles.tag, { borderColor: theme.border }]}
               >
-                <ThemedText type="small">{tag}</ThemedText>
+                <Icon name={tag.icon} size={13} color={theme.textSecondary} />
+                <ThemedText type="small">{tag.label}</ThemedText>
               </Animated.View>
             ))}
           </View>
         </View>
       </Animated.View>
 
-      <Animated.View entering={FadeInUp.duration(320).delay(680)}>
+      <Animated.View entering={FadeInUp.duration(320).delay(680)} style={styles.footnoteRow}>
+        <Icon name="mic" size={13} color={theme.textSecondary} />
         <ThemedText type="small" themeColor="textSecondary" style={styles.footnote}>
           This session will be recorded for skill verification — you’ll confirm consent next.
         </ThemedText>
@@ -98,7 +106,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: Spacing.two,
   },
-  badgeText: { color: '#FFFFFF', fontSize: 28 },
   title: { fontSize: 32, lineHeight: 37, fontWeight: '700', textAlign: 'center' },
   centerText: { textAlign: 'center' },
   card: { borderWidth: 1, borderRadius: 20, overflow: 'hidden', flexDirection: 'row' },
@@ -107,7 +114,17 @@ const styles = StyleSheet.create({
   cardHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: Spacing.two },
   cardHeading: { gap: Spacing.one, flex: 1 },
   cardTitle: { fontSize: 22, lineHeight: 27, fontWeight: '700' },
+  minutesRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   tagRow: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.two },
-  tag: { borderWidth: 1, borderRadius: 99, paddingHorizontal: 10, paddingVertical: 5 },
+  tag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 5,
+    borderWidth: 1,
+    borderRadius: 99,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+  },
+  footnoteRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: Spacing.one },
   footnote: { textAlign: 'center', marginTop: Spacing.two },
 });

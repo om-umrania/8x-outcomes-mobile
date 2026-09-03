@@ -1,6 +1,7 @@
 import { StyleSheet, View } from 'react-native';
 import { router, type Href } from 'expo-router';
 
+import { Icon } from '@/components/Icon';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { SecondaryButton } from '@/components/SecondaryButton';
@@ -22,13 +23,14 @@ export default function FirstNodeVerifiedScreen() {
           onPress={() =>
             router.replace({ pathname: '/profile', params: { highlight: capability?.id ?? '' } } as Href)
           }
+          icon="arrowRight"
         />
       }
     >
       <View style={styles.hero}>
         <View style={[styles.node, { borderColor: Signal.violet }]}>
           <View style={[styles.nodeCore, { backgroundColor: Signal.violet }]}>
-            <ThemedText style={styles.nodeGlyph}>●</ThemedText>
+            <Icon name="verified" size={26} color="#FFFFFF" />
           </View>
         </View>
         <ThemedText type="title" style={styles.title}>
@@ -51,7 +53,7 @@ export default function FirstNodeVerifiedScreen() {
                 NEW CAPABILITY
               </ThemedText>
             </View>
-            <ThemedText style={{ color: Signal.green, fontSize: 20 }}>✓</ThemedText>
+            <Icon name="checkCircle" size={22} color={Signal.green} />
           </View>
           <View style={styles.tagRow}>
             {capability.tags.map((tag) => (
@@ -63,7 +65,12 @@ export default function FirstNodeVerifiedScreen() {
         </View>
       ) : null}
 
-      <SecondaryButton label="See your Eat Eat missions" onPress={() => router.replace('/inbox' as Href)} />
+      <SecondaryButton
+        label="See your Eat Eat missions"
+        onPress={() => router.replace('/inbox' as Href)}
+        icon="arrowRight"
+        iconPosition="trailing"
+      />
     </ScreenContainer>
   );
 }
@@ -79,7 +86,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   nodeCore: { width: 56, height: 56, borderRadius: 28, alignItems: 'center', justifyContent: 'center' },
-  nodeGlyph: { color: '#FFFFFF', fontSize: 18 },
   title: { fontSize: 38, lineHeight: 42, textAlign: 'center', fontWeight: '700' },
   body: { textAlign: 'center', maxWidth: 340 },
   card: { borderWidth: 1, borderRadius: 20, padding: Spacing.three, gap: Spacing.three, marginTop: Spacing.four },

@@ -12,6 +12,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { Icon, type IconName } from '@/components/Icon';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { SecondaryButton } from '@/components/SecondaryButton';
 import { ThemedText } from '@/components/themed-text';
@@ -20,6 +21,8 @@ import { Signal, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
 import { CAPABILITY_DIMENSIONS, CAPABILITY_DIMENSION_DETAILS } from '@/worker/fixture';
 import type { CapabilitySignal } from '@/worker/types';
+
+const SIGNAL_ICON: Record<CapabilitySignal, IconName> = { process: 'chartBar', outcome: 'trendingUp' };
 
 type Filter = 'all' | CapabilitySignal;
 
@@ -132,7 +135,7 @@ export default function CapabilityDetailScreen() {
     return (
       <ScreenContainer>
         <View style={styles.backRow}>
-          <SecondaryButton label="← Your profile" onPress={() => router.back()} />
+          <SecondaryButton label="Your profile" onPress={() => router.back()} icon="arrowLeft" />
         </View>
         {mounted ? (
           <ThemedText type="default" themeColor="textSecondary" style={styles.notFound}>
@@ -172,9 +175,12 @@ export default function CapabilityDetailScreen() {
           onPress={() => setFilter((current) => (current === 'process' ? 'all' : 'process'))}
           style={[styles.numberBlock, filter === 'outcome' && styles.dimmed]}
         >
-          <ThemedText type="small" style={{ color: Signal.violet }}>
-            PROCESS
-          </ThemedText>
+          <View style={styles.numberLabelRow}>
+            <Icon name="chartBar" size={13} color={Signal.violet} />
+            <ThemedText type="small" style={{ color: Signal.violet }}>
+              PROCESS
+            </ThemedText>
+          </View>
           <ThemedText type="title" style={[styles.bigNumber, { color: Signal.violet }]}>
             {processValue}%
           </ThemedText>
@@ -186,9 +192,12 @@ export default function CapabilityDetailScreen() {
           onPress={() => setFilter((current) => (current === 'outcome' ? 'all' : 'outcome'))}
           style={[styles.numberBlock, filter === 'process' && styles.dimmed]}
         >
-          <ThemedText type="small" style={{ color: Signal.blue }}>
-            OUTCOME
-          </ThemedText>
+          <View style={styles.numberLabelRow}>
+            <Icon name="trendingUp" size={13} color={Signal.blue} />
+            <ThemedText type="small" style={{ color: Signal.blue }}>
+              OUTCOME
+            </ThemedText>
+          </View>
           <ThemedText type="title" style={[styles.bigNumber, { color: Signal.blue }]}>
             {outcomeValue}%
           </ThemedText>
@@ -196,7 +205,10 @@ export default function CapabilityDetailScreen() {
       </Animated.View>
 
       <Animated.View entering={FadeInDown.duration(380).delay(140)} style={styles.trendSection}>
-        <ThemedText type="smallBold">Confidence over time</ThemedText>
+        <View style={styles.trendHeaderRow}>
+          <Icon name="history" size={15} color={theme.text} />
+          <ThemedText type="smallBold">Confidence over time</ThemedText>
+        </View>
         <View style={styles.trendRow}>
           {detail.trend.map((point, index) => (
             <TrendBar
@@ -260,6 +272,7 @@ export default function CapabilityDetailScreen() {
                   { backgroundColor: item.signal === 'process' ? Signal.violet : Signal.blue },
                 ]}
               >
+                <Icon name={SIGNAL_ICON[item.signal]} size={11} color="#FFFFFF" />
                 <ThemedText type="small" style={styles.signalPillText}>
                   {item.signal === 'process' ? 'Process' : 'Outcome'}
                 </ThemedText>
@@ -311,10 +324,12 @@ const styles = StyleSheet.create({
     padding: Spacing.three,
   },
   numberBlock: { flex: 1, alignItems: 'center', gap: Spacing.one, paddingVertical: Spacing.one },
+  numberLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   dimmed: { opacity: 0.35 },
   numberDivider: { width: StyleSheet.hairlineWidth, alignSelf: 'stretch' },
   bigNumber: { fontSize: 40, lineHeight: 44, fontWeight: '700' },
   trendSection: { gap: Spacing.two, marginTop: Spacing.four },
+  trendHeaderRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.one },
   trendRow: { flexDirection: 'row', gap: Spacing.two, height: 64, alignItems: 'flex-end' },
   trendTrack: { flex: 1, height: '100%', borderRadius: 6, overflow: 'hidden', justifyContent: 'flex-end' },
   trendFill: { width: '100%', borderRadius: 6 },
@@ -330,7 +345,14 @@ const styles = StyleSheet.create({
   evidenceCard: { borderWidth: 1, borderRadius: 18, padding: Spacing.three, gap: Spacing.two },
   evidenceHeaderRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-start', gap: Spacing.two },
   evidenceTitle: { flex: 1, fontSize: 17 },
-  signalPill: { borderRadius: 99, paddingHorizontal: 10, paddingVertical: 4 },
+  signalPill: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+    borderRadius: 99,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+  },
   signalPillText: { color: '#FFFFFF', fontSize: 11, lineHeight: 15 },
   evidenceNote: { lineHeight: 22 },
   contributionRow: { gap: Spacing.one, marginTop: Spacing.one },

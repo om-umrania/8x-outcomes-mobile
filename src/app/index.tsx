@@ -10,6 +10,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { Icon } from '@/components/Icon';
 import { OnboardingProgress } from '@/components/OnboardingProgress';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { ScreenContainer } from '@/components/ScreenContainer';
@@ -65,6 +66,7 @@ export default function LoginScreen() {
             label={sending ? 'Sending magic link…' : 'Get magic link'}
             onPress={requestMagicLink}
             disabled={!contact.trim() || sending}
+            icon={sending ? undefined : 'arrowRight'}
           />
         </View>
       }
@@ -86,27 +88,33 @@ export default function LoginScreen() {
 
       <Animated.View entering={FadeInDown.duration(420).delay(90)} style={styles.field}>
         <ThemedText type="smallBold">Phone or email</ThemedText>
-        <TextInput
-          accessibilityLabel="Phone or email"
-          autoCapitalize="none"
-          autoCorrect={false}
-          keyboardType="email-address"
-          placeholder="you@example.com"
-          placeholderTextColor={theme.textSecondary}
-          value={contact}
-          onChangeText={setContact}
+        <View
           style={[
-            styles.input,
-            { color: theme.text, backgroundColor: theme.backgroundElement, borderColor: theme.border },
+            styles.inputWrap,
+            { backgroundColor: theme.backgroundElement, borderColor: theme.border },
           ]}
-        />
+        >
+          <Icon name="mail" size={18} color={theme.textSecondary} />
+          <TextInput
+            accessibilityLabel="Phone or email"
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+            placeholder="you@example.com"
+            placeholderTextColor={theme.textSecondary}
+            value={contact}
+            onChangeText={setContact}
+            style={[styles.input, { color: theme.text }]}
+          />
+        </View>
       </Animated.View>
 
       <Animated.View
         entering={FadeInDown.duration(420).delay(160)}
         style={[styles.notice, { backgroundColor: theme.backgroundElement, borderColor: theme.border }]}
       >
-        <ThemedText type="small" themeColor="textSecondary">
+        <Icon name="verified" size={18} color={theme.textSecondary} />
+        <ThemedText type="small" themeColor="textSecondary" style={styles.noticeText}>
           No resume score up front — just a quick calibration mission once you’re in, matched
           to your background.
         </ThemedText>
@@ -119,14 +127,24 @@ const styles = StyleSheet.create({
   hero: { gap: Spacing.two, marginTop: Spacing.four, marginBottom: Spacing.two },
   title: { fontSize: 38, lineHeight: 42, fontWeight: '700' },
   field: { gap: Spacing.two },
-  input: {
+  inputWrap: {
     minHeight: 56,
     borderWidth: 1,
     borderRadius: 16,
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Spacing.two,
     paddingHorizontal: Spacing.three,
-    fontSize: 16,
   },
-  notice: { borderWidth: 1, borderRadius: 16, padding: Spacing.three },
+  input: { flex: 1, fontSize: 16, paddingVertical: Spacing.two },
+  notice: {
+    borderWidth: 1,
+    borderRadius: 16,
+    padding: Spacing.three,
+    flexDirection: 'row',
+    gap: Spacing.two,
+  },
+  noticeText: { flex: 1 },
   footerStack: { gap: Spacing.two },
   dotsRow: { flexDirection: 'row', justifyContent: 'center', gap: 6 },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: '#3B5BFF' },

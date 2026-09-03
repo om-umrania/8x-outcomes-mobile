@@ -3,6 +3,7 @@ import { StyleSheet, View } from 'react-native';
 import { router, useLocalSearchParams, type Href } from 'expo-router';
 
 import { CapabilityBar } from '@/components/CapabilityBar';
+import { Icon } from '@/components/Icon';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { SecondaryButton } from '@/components/SecondaryButton';
 import { ThemedText } from '@/components/themed-text';
@@ -27,7 +28,7 @@ export default function CapabilityProfileScreen() {
     <ScreenContainer>
       <WorkerHeader showProfile={false} />
       <View style={styles.backRow}>
-        <SecondaryButton label="← Missions" onPress={() => router.back()} />
+        <SecondaryButton label="Missions" onPress={() => router.back()} icon="arrowLeft" />
       </View>
 
       <View style={styles.hero}>
@@ -45,11 +46,11 @@ export default function CapabilityProfileScreen() {
 
       <View style={styles.legend}>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: Signal.violet }]} />
+          <Icon name="chartBar" size={14} color={Signal.violet} />
           <ThemedText type="small">Process signal</ThemedText>
         </View>
         <View style={styles.legendItem}>
-          <View style={[styles.legendDot, { backgroundColor: Signal.blue }]} />
+          <Icon name="trendingUp" size={14} color={Signal.blue} />
           <ThemedText type="small">Outcome signal</ThemedText>
         </View>
       </View>
@@ -86,9 +87,12 @@ export default function CapabilityProfileScreen() {
                 {item.completedLabel}
               </ThemedText>
             </View>
-            <ThemedText type="small" themeColor="textSecondary">
-              {item.channel === 'voice' ? 'Voice' : 'Text'}
-            </ThemedText>
+            <View style={styles.historyChannel}>
+              <Icon name={item.channel === 'voice' ? 'waveform' : 'doc'} size={13} color={theme.textSecondary} />
+              <ThemedText type="small" themeColor="textSecondary">
+                {item.channel === 'voice' ? 'Voice' : 'Text'}
+              </ThemedText>
+            </View>
           </View>
         ))}
       </View>
@@ -102,7 +106,6 @@ const styles = StyleSheet.create({
   title: { fontSize: 38, lineHeight: 42, fontWeight: '700' },
   legend: { flexDirection: 'row', flexWrap: 'wrap', gap: Spacing.three },
   legendItem: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
-  legendDot: { width: 10, height: 10, borderRadius: 5 },
   profileCard: {
     borderWidth: 1,
     borderRadius: 22,
@@ -121,4 +124,5 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.two,
   },
   historyCopy: { flex: 1, gap: Spacing.one },
+  historyChannel: { flexDirection: 'row', alignItems: 'center', gap: 5 },
 });

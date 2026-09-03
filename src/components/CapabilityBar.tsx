@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated';
 
+import { Icon } from '@/components/Icon';
 import { ThemedText } from '@/components/themed-text';
 import { Signal, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -56,11 +57,7 @@ export function CapabilityBar({
             <ThemedText type="small" themeColor="textSecondary">
               {dimension.signalLabel}
             </ThemedText>
-            {onPress ? (
-              <ThemedText type="small" themeColor="textSecondary">
-                ›
-              </ThemedText>
-            ) : null}
+            {onPress ? <Icon name="chevronRight" size={15} color={theme.textSecondary} /> : null}
           </View>
         </View>
         <View style={[styles.track, { backgroundColor: theme.backgroundSelected }]}>

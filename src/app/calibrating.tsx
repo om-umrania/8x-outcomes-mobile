@@ -12,6 +12,7 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 
+import { Icon, type IconName } from '@/components/Icon';
 import { OnboardingProgress } from '@/components/OnboardingProgress';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
@@ -20,6 +21,9 @@ import { useTheme } from '@/hooks/use-theme';
 import { CALIBRATION_PARSING_STEPS } from '@/worker/fixture';
 
 const STEP_MS = 650;
+
+/** One icon per CALIBRATION_PARSING_STEPS entry, in order. */
+const STEP_ICONS: IconName[] = ['doc', 'checkCircle', 'wand', 'bolt'];
 
 function SpinningRing() {
   const rotation = useSharedValue(0);
@@ -35,9 +39,7 @@ function SpinningRing() {
   return (
     <View style={styles.ringWrap}>
       <Animated.View style={[styles.ring, ringStyle, { borderTopColor: Signal.violet }]} />
-      <ThemedText type="subtitle" style={{ color: Signal.violet }}>
-        ◎
-      </ThemedText>
+      <Icon name="wand" size={30} color={Signal.violet} />
     </View>
   );
 }
@@ -96,7 +98,7 @@ export default function CalibratingScreen() {
                   exiting={FadeOutUp.duration(150)}
                   style={styles.statusTextRow}
                 >
-                  <View style={[styles.statusDot, { backgroundColor: Signal.violet }]} />
+                  <Icon name={STEP_ICONS[stepIndex]} size={16} color={Signal.violet} />
                   <ThemedText type="smallBold" style={styles.statusText}>
                     {CALIBRATION_PARSING_STEPS[stepIndex]}
                   </ThemedText>
@@ -157,7 +159,6 @@ const styles = StyleSheet.create({
   },
   statusTextWrap: { minHeight: 20, justifyContent: 'center' },
   statusTextRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.two },
-  statusDot: { width: 8, height: 8, borderRadius: 4 },
   statusText: { flex: 1 },
   progressTrack: { height: 3, borderRadius: 2, overflow: 'hidden' },
   progressFill: { height: '100%', borderRadius: 2, backgroundColor: Signal.violet },

@@ -1,5 +1,6 @@
 import { StyleSheet, Switch, View } from 'react-native';
 
+import { Icon } from '@/components/Icon';
 import { ThemedText } from '@/components/themed-text';
 import { Signal, Spacing } from '@/constants/theme';
 import { useTheme } from '@/hooks/use-theme';
@@ -25,6 +26,9 @@ export function ConsentPanel({
       ]}
     >
       <View style={styles.topRow}>
+        <View style={[styles.iconBadge, { backgroundColor: theme.backgroundSelected }]}>
+          <Icon name="handRaised" size={18} color={theme.text} />
+        </View>
         <View style={styles.copy}>
           <ThemedText type="smallBold">Recording consent</ThemedText>
           <ThemedText type="small" themeColor="textSecondary">
@@ -43,6 +47,7 @@ export function ConsentPanel({
         turn it off at any time or decline this mission.
       </ThemedText>
       <View style={styles.demoDisclosure}>
+        <Icon name="info" size={14} color="#8A5600" />
         <ThemedText type="smallBold" style={styles.demoDisclosureText}>
           Demo capture state · no media file is created or uploaded in this build.
         </ThemedText>
@@ -54,12 +59,16 @@ export function ConsentPanel({
 const styles = StyleSheet.create({
   panel: { borderWidth: 1, borderRadius: 18, padding: Spacing.three, gap: Spacing.three },
   topRow: { flexDirection: 'row', alignItems: 'center', gap: Spacing.three },
+  iconBadge: { width: 36, height: 36, borderRadius: 18, alignItems: 'center', justifyContent: 'center' },
   copy: { flex: 1, gap: Spacing.one },
   demoDisclosure: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: Spacing.two,
     borderRadius: 12,
     backgroundColor: '#FFF2D8',
     paddingHorizontal: 10,
     paddingVertical: 8,
   },
-  demoDisclosureText: { color: '#8A5600', fontSize: 12, lineHeight: 17 },
+  demoDisclosureText: { flex: 1, color: '#8A5600', fontSize: 12, lineHeight: 17 },
 });

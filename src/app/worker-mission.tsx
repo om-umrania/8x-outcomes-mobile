@@ -3,6 +3,7 @@ import { StyleSheet, TextInput, View } from 'react-native';
 import { router, type Href } from 'expo-router';
 
 import { ConsentPanel } from '@/components/ConsentPanel';
+import { Icon } from '@/components/Icon';
 import { PrimaryButton } from '@/components/PrimaryButton';
 import { ScreenContainer } from '@/components/ScreenContainer';
 import { SecondaryButton } from '@/components/SecondaryButton';
@@ -31,7 +32,13 @@ export default function WorkerMissionScreen() {
   if (!mission) {
     return (
       <ScreenContainer
-        footer={<PrimaryButton label="Back to missions" onPress={() => router.replace('/inbox' as Href)} />}
+        footer={
+          <PrimaryButton
+            label="Back to missions"
+            onPress={() => router.replace('/inbox' as Href)}
+            icon="arrowRight"
+          />
+        }
       >
         <ThemedText type="title" style={styles.title}>
           Choose a mission first.
@@ -70,7 +77,7 @@ export default function WorkerMissionScreen() {
   let footer;
   if (status === 'completed' || status === 'declined') {
     footer = (
-      <PrimaryButton label="Back to missions" onPress={() => router.replace('/inbox' as Href)} />
+      <PrimaryButton label="Back to missions" onPress={() => router.replace('/inbox' as Href)} icon="arrowRight" />
     );
   } else if (!captureActive) {
     footer = (
@@ -84,6 +91,7 @@ export default function WorkerMissionScreen() {
         }
         onPress={() => startMission(mission.id)}
         disabled={!consented}
+        icon={mission.channel === 'voice' ? 'phone' : 'bolt'}
       />
     );
   } else {
@@ -92,6 +100,7 @@ export default function WorkerMissionScreen() {
         label={mission.channel === 'voice' ? 'End call & send' : 'Submit answers'}
         onPress={submit}
         disabled={mission.channel === 'text' && !textAnswersComplete}
+        icon="checkCircle"
       />
     );
   }
@@ -99,10 +108,13 @@ export default function WorkerMissionScreen() {
   return (
     <ScreenContainer footer={footer}>
       <View style={styles.navRow}>
-        <SecondaryButton label="← Missions" onPress={() => router.back()} />
-        <ThemedText type="small" themeColor="textSecondary">
-          {mission.estimatedMinutes} min
-        </ThemedText>
+        <SecondaryButton label="Missions" onPress={() => router.back()} icon="arrowLeft" />
+        <View style={styles.minutesRow}>
+          <Icon name="clock" size={13} color={theme.textSecondary} />
+          <ThemedText type="small" themeColor="textSecondary">
+            {mission.estimatedMinutes} min
+          </ThemedText>
+        </View>
       </View>
 
       <View style={styles.hero}>
@@ -133,9 +145,12 @@ export default function WorkerMissionScreen() {
         <ThemedText>{mission.request}</ThemedText>
         {mission.resourceLabel ? (
           <View style={[styles.resourceRow, { borderColor: theme.border }]}>
-            <ThemedText type="small" themeColor="textSecondary">
-              RESOURCE
-            </ThemedText>
+            <View style={styles.resourceLabelRow}>
+              <Icon name="paperclip" size={14} color={theme.textSecondary} />
+              <ThemedText type="small" themeColor="textSecondary">
+                RESOURCE
+              </ThemedText>
+            </View>
             <ThemedText type="smallBold">{mission.resourceLabel}</ThemedText>
           </View>
         ) : null}
@@ -186,7 +201,7 @@ export default function WorkerMissionScreen() {
       {status === 'in_progress' && mission.channel === 'voice' ? (
         <View style={styles.callCard}>
           <View style={styles.callIcon}>
-            <ThemedText style={styles.callIconText}>◉</ThemedText>
+            <Icon name="phone" size={28} color="#FFFFFF" />
           </View>
           <ThemedText type="subtitle" style={styles.callTitle}>
             {captureActive ? 'Call in progress' : 'Call paused'}
@@ -200,7 +215,7 @@ export default function WorkerMissionScreen() {
       ) : null}
 
       {status === 'available' ? (
-        <SecondaryButton label="Decline this mission" onPress={decline} destructive />
+        <SecondaryButton label="Decline this mission" onPress={decline} destructive icon="xmark" />
       ) : null}
     </ScreenContainer>
   );
@@ -208,6 +223,7 @@ export default function WorkerMissionScreen() {
 
 const styles = StyleSheet.create({
   navRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  minutesRow: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   hero: { gap: Spacing.two, marginTop: Spacing.two },
   title: { fontSize: 36, lineHeight: 41, fontWeight: '700' },
   adaptiveLabel: { color: '#8A5600', fontSize: 11, letterSpacing: 1.1 },
@@ -220,6 +236,7 @@ const styles = StyleSheet.create({
     paddingTop: Spacing.two,
     marginTop: Spacing.one,
   },
+  resourceLabelRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   questions: { gap: Spacing.three },
   sectionTitleRow: { flexDirection: 'row', justifyContent: 'space-between', gap: Spacing.two },
   pausedText: { color: Signal.red },
@@ -248,7 +265,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  callIconText: { color: '#FFFFFF', fontSize: 28 },
   callTitle: { fontSize: 28, lineHeight: 34, color: '#111111' },
   callCopy: { textAlign: 'center', color: '#555A72' },
 });
